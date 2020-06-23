@@ -1,0 +1,52 @@
+- Download and install vagrant
+https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.dmg
+
+- Download and install virtualbox
+https://download.virtualbox.org/virtualbox/6.1.10/VirtualBox-6.1.10-138449-OSX.dmg
+
+# Some retriction before installing virtualbox encountered. So we prepare to allow the installation of virtualbox software within our computer
+Goto -> System Preference -> Security & privacy -> General -> Unlock the padlock at bottom left corner -> Select installation of 'Oracle software'
+
+- Open terminal then type 'mkdir folder_name' then go inside the newly created folder
+- You can check the list of command in vagrant by typing 'vagrant' in the terminal
+
+- Type 'vagrant up' to start and provision the vagrant environment
+- Type 'vagrant init Your_selected_OS' to initialize a new vagrant environment by creating a vagrant file (see. https://app.vagrantup.com/boxes/search) for your desired environment
+- Inside the vagrant file, we will see a configuration like this (see below) but the I already put the initial setup for my project
+    # -*- mode: ruby -*-
+    # vi: set ft=ruby :
+
+    Vagrant.configure("2") do |config|
+    
+        # Box Settings
+        config.vm.box = "ubuntu/bionic64"
+
+        # Provider Settings
+        config.vm.provider "virtualbox" do |vb|
+            vb.memory = 2048
+            vb.cpus = 4
+        end
+
+        # Network Settings
+        config.vm.network "public_network"
+        config.vm.network "forwarded_port", guest: 3306, host: 3306
+        config.vm.network "forwarded_port", guest: 8888, host: 8888
+        config.vm.network "forwarded_port", guest: 80, host: 80
+
+        # Folder Settings
+        config.vm.synced_folder "/Users/macbook/Documents/Projects/vgdemo/data", "/var/www/html", :mount_options => ['dmode=774','fmode=775']
+
+        # Provision Settings
+        config.vm.provision "shell", inline: <<-SHELL
+            apt-get update
+            usermod -a -G vagrant www-data
+            apt-get install -y apache2
+        SHELL
+
+    end
+    
+- Type 'vagrant ssh' to connect into the server
+- Type this command to update your dependency
+    sudo apt update 
+    sudo apt update -y 
+    sudo apt update

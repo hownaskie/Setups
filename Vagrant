@@ -44,7 +44,7 @@ Goto -> System Preference -> Security & privacy -> General -> Unlock the padlock
         SHELL
 
     end
-    
+- Type 'vagrant up' or 'vagrant reload' to update our changes to the vagrant file   
 - Type 'vagrant ssh' to connect into the server
 - Type this command to update your dependency
     sudo apt update 
